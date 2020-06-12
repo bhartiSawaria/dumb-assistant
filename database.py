@@ -43,3 +43,12 @@ def updateInfoTable(name, value):
     cursor.execute('UPDATE Info set value = "'+value+'" where name = "'+name+'"')
     connection.commit()
 
+def getSpeakingStatus():
+    connection = createConnection()
+    cursor = connection.cursor()
+    cursor.execute('SELECT value FROM Info where name = "speech"')
+    status = cursor.fetchone()[0]
+    if status == 'on':
+        return True
+    return False
+

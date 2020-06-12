@@ -1,14 +1,35 @@
 
 from output_module import showOutput
 from input_module import getInput
-from database import getResultFromDatabase, insertIntoQueryAndResults
+from database import getResultFromDatabase, insertIntoQueryAndResults, updateInfoTable, getSpeakingStatus
 from time_modules import getDate, getTime
 from internet import getInternetConnectionInfo, getAnsFromWikipedia
 from assistant_details import getName, changeName
+from speech_modules import speak
 
 def process(query):
     answer = getResultFromDatabase(query)
-    if answer == 'getTime':
+
+    if answer == 'startSpeaking':
+        if getInternetConnectionInfo():
+            speech = getSpeakingStatus()
+            if speech:
+                return 'I am already speaking'
+            else:
+                updateInfoTable('speech', 'on')
+                return 'Okay I will speak now.'
+        else:
+            return 'Please turn on internet'
+
+    elif answer == 'stopSpeaking':
+        speech = getSpeakingStatus()
+        if not speech:
+            return 'I am not speaking'
+        else:
+            updateInfoTable('speech', 'off')
+            return "Okay I won't speak now."
+
+    elif answer == 'getTime':
         return getTime()
 
     elif answer == 'getDate':
