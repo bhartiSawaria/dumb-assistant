@@ -25,3 +25,21 @@ def insertIntoQueryAndResults(query, result):
     cursor.execute('INSERT INTO QueryAndResult values("'+query+'", "'+result+'")')
     connection.commit()
 
+def insertIntoInfo(name, value):
+    connection = createConnection()
+    cursor = connection.cursor()
+    cursor.execute('INSERT into Info values("'+name+'", "'+value+'")')
+    connection.commit()
+
+def getInfoFromInfoTable(name):
+    connection = createConnection()
+    cursor = connection.cursor()
+    cursor.execute('SELECT value FROM Info where name = "'+name+'"')
+    return cursor.fetchone()
+
+def updateInfoTable(name, value):
+    connection = createConnection()
+    cursor = connection.cursor()
+    cursor.execute('UPDATE Info set value = "'+value+'" where name = "'+name+'"')
+    connection.commit()
+

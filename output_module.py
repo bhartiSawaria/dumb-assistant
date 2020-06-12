@@ -1,3 +1,6 @@
 
+from assistant_details import getName
+
 def showOutput(out):
-    print("Assistant: " + str(out))
+    name = getName()
+    print( name + ": " + str(out))
