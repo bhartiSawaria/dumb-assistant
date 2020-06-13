@@ -7,6 +7,7 @@ from internet import getInternetConnectionInfo, getAnsFromWikipedia
 from assistant_details import getName, changeName
 from speech_modules import speak
 from toOpen_modules import openSomething, openGithub, playMusic
+from weather_modules import getWeatherInfo
 
 def process(query):
     answer = getResultFromDatabase(query)
@@ -43,45 +44,51 @@ def process(query):
         return 'Your internet is not connected'
 
     elif answer == 'playMusic':
-        query =query.replace('play', '')
+        query = query.replace('play', '')
         return playMusic(query)
+
+    elif answer == 'weatherConditions':
+        if getInternetConnectionInfo():
+            index = query.find('of')
+            if index >= 0:
+                index += 2
+                query = query[index:]
+                query = query.replace('city', '')
+                query = query.strip()
+                return getWeatherInfo(query)
+            else:
+                return "Sorry, I can't help with this one."
+        else:
+            return 'Your internet is not connected'
     
     elif answer == 'open':
         if 'github' in query or  'account' in query:
             index = query.find('of')
-            index += 2
-            toOpen = query[index:]
-            toOpen = ((toOpen.replace(" ", "")).lower()).strip()
-            return openGithub(toOpen)
-        else:
-            index = query.find('open')
-            index += 4
-            if index >= len(query):
-                return "Can't open, try another way."
-            else:
+            if index >= 0:
+                index += 2
                 toOpen = query[index:]
                 toOpen = ((toOpen.replace(" ", "")).lower()).strip()
-                return openSomething(toOpen)
-    
-    elif answer == 'gitHub':
-        index = 0
-        count = 0
-        query = query.strip()
-        for i in range(len(query), -1, -1):
-            if query[i] == ' ':
-                count += 1
-            if count == 2:
-                index = i
-                break
-        toOpen = query[index+1:]
-        toOpen = ((toOpen.replace(" ", "")).lower()).strip()
-        return openGithub(toOpen)
+                return openGithub(toOpen)
+            else:
+                return "Sorry, I can't help with this one."
+        else:
+            index = query.find('open')
+            if index >= 0:
+                index += 4
+                if index >= len(query):
+                    return "Can't open, try another way."
+                else:
+                    toOpen = query[index:]
+                    toOpen = ((toOpen.replace(" ", "")).lower()).strip()
+                    return openSomething(toOpen)
+            else:
+                return "Sorry, I can't help with this one."
 
     elif answer == 'changeAssistantName':
         showOutput('Okay, what do you want to call me?')
         inp = input('User: ')
         if inp == getName():
-            showOutput('It is my previous name.')
+            return 'It is my previous name.'
         else:
             changeName(inp)
             return 'Okay I change my name to ' + str(inp)
