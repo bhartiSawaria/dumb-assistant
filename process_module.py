@@ -6,6 +6,7 @@ from time_modules import getDate, getTime
 from internet import getInternetConnectionInfo, getAnsFromWikipedia
 from assistant_details import getName, changeName
 from speech_modules import speak
+from toOpen_modules import openSomething, openGithub, playMusic
 
 def process(query):
     answer = getResultFromDatabase(query)
@@ -40,6 +41,41 @@ def process(query):
         if isConnected:
             return 'Your internet is connected'
         return 'Your internet is not connected'
+
+    elif answer == 'playMusic':
+        query =query.replace('play', '')
+        return playMusic(query)
+    
+    elif answer == 'open':
+        if 'github' in query or  'account' in query:
+            index = query.find('of')
+            index += 2
+            toOpen = query[index:]
+            toOpen = ((toOpen.replace(" ", "")).lower()).strip()
+            return openGithub(toOpen)
+        else:
+            index = query.find('open')
+            index += 4
+            if index >= len(query):
+                return "Can't open, try another way."
+            else:
+                toOpen = query[index:]
+                toOpen = ((toOpen.replace(" ", "")).lower()).strip()
+                return openSomething(toOpen)
+    
+    elif answer == 'gitHub':
+        index = 0
+        count = 0
+        query = query.strip()
+        for i in range(len(query), -1, -1):
+            if query[i] == ' ':
+                count += 1
+            if count == 2:
+                index = i
+                break
+        toOpen = query[index+1:]
+        toOpen = ((toOpen.replace(" ", "")).lower()).strip()
+        return openGithub(toOpen)
 
     elif answer == 'changeAssistantName':
         showOutput('Okay, what do you want to call me?')
