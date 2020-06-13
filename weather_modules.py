@@ -1,9 +1,9 @@
 
 from time_modules import getDate
-from key_info import city_forecast
+from key_info import cityForecast
 
 def getWeatherInfo(query):
-    result = city_forecast(query)
+    result = cityForecast(query)
     answer = ''
     if result['cod'] == '404':
         return "Can't recognise this city."

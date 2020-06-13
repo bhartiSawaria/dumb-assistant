@@ -8,6 +8,7 @@ from assistant_details import getName, changeName
 from speech_modules import speak
 from toOpen_modules import openSomething, openGithub, playMusic
 from weather_modules import getWeatherInfo
+from news import getNewsHeadlines
 
 def process(query):
     answer = getResultFromDatabase(query)
@@ -58,6 +59,12 @@ def process(query):
                 return getWeatherInfo(query)
             else:
                 return "Sorry, I can't help with this one."
+        else:
+            return 'Your internet is not connected'
+
+    elif answer == 'newsHeadlines':
+        if getInternetConnectionInfo():
+            return getNewsHeadlines()
         else:
             return 'Your internet is not connected'
     
